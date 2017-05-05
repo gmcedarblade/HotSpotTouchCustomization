@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Image on Touch(Canvas inside another canvas with for loop)</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
+        <style>
+            body {
+                
+                background-image: url(https://www.wisc-online.com/ARISE_Files/Experimental/bradM.png);
+                background-size: 100% 930px;
+                background-repeat: no-repeat;
+                min-height: 886px;
+                width: 100%;
+                
+                
+            }
+        </style>
+    </head>
+    
+    <body>
+        <canvas class="canvas1" style="border:1px solid #000;">
+        </canvas>
+        <!--<canvas class="canvas2" style="border:1px solid #000;">
+        </canvas>-->
+        <div style="display:none;">
+            <img class="img" src="https://www.wisc-online.com/ARISE_Files/Heart_Failure/Heart_Failure_Nursing/HF-N1.jpg">
+        </div>
+    </body>
+    <script type="text/javascript">
+        var canvas1 = document.querySelector('.canvas1');
+        //var canvas2 = document.querySelector('.canvas2');
+        
+        var ctx1 = canvas1.getContext('2d');
+        //var ctx2 = canvas2.getContext('2d');
+        
+        var img = document.querySelector('.img');
+        
+        canvas1.style.width = "800px";
+        canvas1.style.height = "886px";
+
+        canvas1.style.position = "absolute";
+        canvas1.style.zIndex = "100";
+        
+        
+        
+        canvas1.addEventListener("click", function(e) {
+            
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+            
+            console.log("touch in mouse down");
+            
+            var x = Math.round(e.clientX - canvas1.offsetLeft);
+            console.log("value of x: " + x);
+            
+            var y = Math.round(e.clientY - canvas1.offsetTop);
+            console.log("value of y: " + y);
+            
+            
+            console.log("after x and y");
+            
+            ctx1.drawImage(img, (x), (y), 25, 25);
+            
+            console.log("should have drawn...");
+            canvas1.style.zIndex = "100";
+            
+        });
+        
+//        canvas2.style.width = "100px";
+//        canvas2.style.height = "100px";
+//        canvas2.style.left = "350px";
+//        canvas2.style.top = "525px";
+//        canvas2.style.zIndex = "1";
+//        canvas2.style.position = "absolute";
+//        
+//        canvas2.addEventListener("mousedown", function(e){
+//            
+//            ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
+//            canvas2.style.zIndex = "100";
+//            canvas1.style.zIndex = "-1";
+//            
+//        });
+    
+    </script>
+</html>
