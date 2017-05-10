@@ -10,6 +10,11 @@
                 padding: 0;
             }
             
+            body {
+                font-family: Georgia, sans-serif;
+                min-height: 886px;
+            }
+            
             .tapArea {
                 position: relative;
             }
@@ -22,23 +27,149 @@
                 background: url('https://www.wisc-online.com/ARISE_Files/AED_Game/Media/CPR-Hands-Icons.png') no-repeat;
                 /*background-size: 75px 75px;*/
                 position: absolute;
-                /*display: none;*/
+                display: none;
                 
             }
+            
+            /* Styles for message box and buttons*/
+            h2 {
+                color: #604383;
+                text-align: center;
+            }
+            
+            p {
+                text-align: center;
+            }
+            
+            main {
+                margin: 25px;
+                font-size: 1.38rem;
+            }
+
+            #btnClear, #btnSubmit {
+                background-color: #E5DEEE;
+                border: 1px solid #604383;
+                border-radius: 5px;
+                box-shadow: inset 0 0 0 1px #a389c2;
+                color: #604383;
+                font-family: Georgia, Sans-Serif;
+                font-size: 1.38rem;
+                margin: 0.5em;
+                min-width: 150px;
+                padding: 6px;
+            }
+
+            #btnExit {
+                background-color: #ffb3b3;
+                border: 1px solid #b30000;
+                border-radius: 5px;
+                box-shadow: inset 0 0 0 1px #ff4d4d;
+                color: #b30000;
+                font-family: Georgia, Sans-Serif;
+                font-size: 1.38rem;
+                margin: 0.5em;
+                min-width: 150px;
+                padding: 6px;
+            }
+
+            #buttonsDiv {
+                text-align: center;
+                width: 100%;
+             }
+
+            #btnExit {
+                float: left;
+                margin-left: 20px;
+            }
+
+            #btnReplayVideo {
+                background: none;
+                border: none;
+                color: #579DCE;
+                display: block;
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-bottom: 10px;
+                padding: 0;
+            }
+
+            #btnSubmit {
+                float: right;
+                margin-right: 20px;
+            }
+
+            footer {
+                clear: both;
+            }
+
+            #messageDiv {
+                height: 30px;
+                max-width: 100%;
+                margin: 20px;
+                padding: 10px;
+            }
+
+            .messageDivNeutral {
+                background: #f2eef6;
+                border: 1px solid #604383;
+                box-shadow: inset 0 0 0 1px #a389c2;
+            }
+
+            .messageDivCorrect {
+                background: #ebfaeb;
+                border: 1px solid #248f24;
+                box-shadow: inset 0 0 0 1px #70db70;
+                color: #248f24;
+            }
+
+            .messageDivIncorrect {
+                background-color: #ffb3b3;
+                border: 1px solid #b30000;
+                box-shadow: inset 0 0 0 1px #ff4d4d;
+                color: #b30000;
+            }
+            
         </style>
 
     </head>
     
     <body>
+        <h2>Instructions:</h2>
+        <p>Tap the correct area to preform CPR</p>
         <div class="tapArea" style="border: 1px solid #000;">
-        <!--<canvas class="canvas2" style="border:1px solid #000;">
-        </canvas>-->
             <div class="cprArea">
             </div>
             <img class="cprPerson" src="https://www.wisc-online.com/ARISE_Files/AED_Game/Media/CPR-HotSpot-Image.jpg" style="width:100%;min-height: 886px;" style="border: 1px solid #000;">
         </div>
+        <div id="buttonsDiv">
+        <div id="messageDiv" class="messageDivNeutral"><span id="messageSpan"></span></div>
+            <button id="btnExit" type="submit">Exit Game</button>
+            <button id="btnClear" type="submit">Clear</button>
+            <button id="btnSubmit" type="submit">Submit Answer</button>
+        </div>
+        <audio id="failAudio">
+            <source src="http://arisgames.org/server/gamedatav2/27300/arise5d33f61887083bc46b4a46b6a3024fa.mp3" type="audio/mp3">
+        </audio>
+        <footer>
+            <small>&copy; 2017 ARISE Project</small>
+        </footer>
+        <script>
+            function alertWrong() {
+
+                messageDiv.classList.add("messageDivIncorrect")
+                messageDiv.classList.remove("messageDivNeutral");
+
+                setTimeout(function() {
+
+                    messageDiv.classList.add("messageDivNeutral")
+                    messageDiv.classList.remove("messageDivIncorrect");
+
+                }, 3000);
+
+            }
+        </script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script type="text/javascript">
+        <script type="text/javascript" id="fastClick">
             /*
              FastClick: polyfill to remove click delays on browsers with touch UIs.
              @codingstandard ftlabs-jsv2
@@ -62,12 +193,14 @@
             27<=+(/Firefox\/([0-9]+)/.exec(navigator.userAgent)||[,0])[1]&&(b=document.querySelector("meta[name=viewport]"))&&(-1!==b.content.indexOf("user-scalable=no")||document.documentElement.scrollWidth<=window.outerWidth)?!0:"none"===a.style.touchAction||"manipulation"===a.style.touchAction?!0:!1};e.attach=function(a,b){return new e(a,b)};"function"===typeof define&&"object"===typeof define.amd&&define.amd?define(function(){return e}):"undefined"!==typeof module&&module.exports?(module.exports=e.attach,
             module.exports.FastClick=e):window.FastClick=e})();
         </script>
-        <script type="text/javascript">
+        <script type="text/javascript" class="cprHands">
             $(function() {
                 
                 var nativeWidth = 0,
                     nativeHeight = 0,
-                    $tapArea = $('.tapArea');
+                    $tapArea = $('.tapArea'),
+                    btnClear = document.querySelector("#btnClear"),
+                    btnSubmit = document.querySelector("#btnSubmit");
                 
                 var imageObject = new Image();
                 
@@ -87,13 +220,13 @@
                         posX,
                         posY;
                     
-                    console.log('hands width: ' + handsWidth  + '\nhands height: ' + handsHeight);
-                    
                     nativeWidth = imageObject.width;
                     nativeHeight = imageObject.height;
                     
+                    
+                    
                     $tapArea.mousedown(function(e) {
-                       
+                    
                         $target = $(this);
                         
                         tapAreaOffset = $target.offset();
@@ -101,29 +234,30 @@
                         mouseX = e.pageX - tapAreaOffset.left;
                         mouseY = e.pageY - tapAreaOffset.top;
                         
-                        console.log("mousex: " + mouseX + "\nmousey: " + mouseY);
-                        
                         $hands.stop(true);
                         
                         backgroundX = Math.round(mouseX / $smallImage.width()) / 2;
                         backgroundY = Math.round(mouseY / $smallImage.height()) / 2;
                         
-                        console.log("backgroundX: " + backgroundX + "\nbackgroundY: " + backgroundY);
-                        
                         posX = mouseX - handsWidth/2;
                         posY = mouseY - handsHeight/2;
                         
-                        
-                        console.log("here");
                         $hands.css({
                             top: posY,
                             left: posX,
-                            backgroundPosition: backgroundX + 'px ' + backgroundY + 'px'
+                            backgroundPosition: backgroundX + 'px ' + backgroundY + 'px',
+                            display: 'inline'
                         }, false);
                         
                     });    
                     
+                    btnClear.addEventListener("click", function(e){
+                        
+                        $hands.css({display: 'none'});
+                        
+                    }, false);
                     
+       
                 };
                 
             });
